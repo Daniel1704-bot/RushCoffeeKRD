@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RushCoffee — доставка</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #FAEBD7; color: #2d2a24; }
+    .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+    .header { background: color: #FAEBD7; backdrop-filter: blur(2px); position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 20px rgba(0,0,0,0.03); }
+    .header .container { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; padding: 14px 24px; }
+    .logo { font-size: 1.8rem; font-weight: 700; background: linear-gradient(135deg, #191970, #d35400); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .nav-links { display: flex; gap: 28px; font-weight: 500; }
+    .nav-links a { text-decoration: none; color: #2d2a24; transition: color 0.2s; cursor: pointer; }
+    .nav-links a:hover { color: #191970; }
+    .cart-icon { position: relative; cursor: pointer; background: #f7f2ec; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; border-radius: 60px; }
+    .cart-count { position: absolute; top: -6px; right: -6px; background: #191970; color: white; font-size: 0.7rem; font-weight: bold; padding: 2px 8px; border-radius: 40px; min-width: 22px; text-align: center; }
+    .hero {
+  position: relative;          
+  padding: 60px 0;
+  border-radius: 0 0 40px 40px;
+  margin-bottom: 40px;
+  overflow: hidden;            
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('/static/images/HeroPic1.jpg') center/cover no-repeat;          
+  z-index: -1;                
+}
+    .hero-content { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 40px; }
+    .hero-text h1 { font-size: 3rem; font-weight: 800; color: #FAEBD7; line-height: 1.2; margin-bottom: 20px; }
+    .hero-text p { font-size: 1.2rem; color: #FAEBD7; max-width: 500px; margin-bottom: 28px; }
+    .btn-primary { background: #191970; border: none; padding: 14px 32px; border-radius: 40px; font-weight: 600; color: white; cursor: pointer; box-shadow: 0 6px 14px rgba(266,234,216,1); transition: 0.2s; }
+    .btn-primary:hover { background: #cf711f; transform: translateY(-2px); }
+    
+    @media (max-width: 700px) { .hero-text h1 { font-size: 2.2rem; } .hero-img { width: 100%; height: 200px; } }
+    .filter-section { margin: 20px 0 32px; display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+    .filter-btn { background: white; border: 1px solid #ffe0cc; padding: 8px 22px; border-radius: 50px; font-weight: 500; cursor: pointer; transition: all 0.2s; color: #5a4a3a; }
+    .filter-btn.active { background: #191970; color: white; border-color: #191970; }
+    .filter-btn:hover { background: #f7e3d3; }
+    .section-title { font-size: 2rem; font-weight: 700; margin: 40px 0 24px; position: relative; display: inline-block; }
+    .section-title:after { content: ''; width: 50px; height: 4px; background: #191970; bottom: -8px; left: 0; position: absolute; border-radius: 4px; }
+    .menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; margin: 30px 0 60px; }
+    .card { background: white; border-radius: 28px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.05); transition: 0.25s; display: flex; flex-direction: column; }
+    .card:hover { transform: translateY(-6px); box-shadow: 0 20px 30px rgba(0,0,0,0.1); }
+    .card-img { width: 100%; height: 180px; object-fit: cover; background: #f2e3d8; }
+    .card-content { padding: 18px 18px 22px; flex: 1; display: flex; flex-direction: column; }
+    .card-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 8px; }
+    .card-desc { color: #7e6b5a; font-size: 0.85rem; margin-bottom: 16px; }
+    .price { font-weight: 800; font-size: 1.5rem; color: #191970; margin-bottom: 16px; }
+    .add-to-cart { background: #2d2a24; color: white; border: none; padding: 12px 0; border-radius: 40px; font-weight: 600; cursor: pointer; transition: 0.2s; margin-top: auto; }
+    .add-to-cart:hover { background: #191970; }
+    .contacts { background: #fff4ed; border-radius: 40px; padding: 40px 32px; margin: 40px 0; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 30px; }
+    .contact-item { display: flex; align-items: center; gap: 16px; font-size: 1rem; }
+    .contact-item i { font-size: 1.8rem; color: #191970; }
+    footer { text-align: center; padding: 28px 0; border-top: 1px solid #f0e2d6; color: #8f7a68; }
+    .cart-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(3px); visibility: hidden; opacity: 0; transition: 0.25s; z-index: 200; }
+    .cart-overlay.open { visibility: visible; opacity: 1; }
+    .cart-panel { position: fixed; top: 0; right: -100%; width: 100%; max-width: 480px; height: 100%; background: white; box-shadow: -8px 0 30px rgba(0,0,0,0.1); z-index: 210; transition: right 0.3s; display: flex; flex-direction: column; overflow-y: auto; }
+    .cart-panel.open { right: 0; }
+    .cart-header { display: flex; justify-content: space-between; align-items: center; padding: 24px; border-bottom: 1px solid #f0e2d6; font-size: 1.5rem; font-weight: 700; }
+    .close-cart { background: none; border: none; font-size: 1.8rem; cursor: pointer; color: #7e6b5a; }
+    .cart-items-list { flex: 1; padding: 20px; display: flex; flex-direction: column; gap: 20px; }
+    .cart-item { display: flex; justify-content: space-between; align-items: center; background: #fef8f2; padding: 12px 16px; border-radius: 24px; }
+    .cart-item-info { flex: 2; }
+    .cart-item-name { font-weight: 700; }
+    .cart-item-price { font-size: 0.85rem; color: #191970; }
+    .cart-item-actions { display: flex; align-items: center; gap: 12px; }
+    .cart-item-actions button { background: white; border: 1px solid #ddd; width: 32px; height: 32px; border-radius: 40px; font-weight: bold; cursor: pointer; }
+    .cart-item-actions button:hover { background: #191970; color: white; border-color: #191970; }
+    .cart-total { padding: 20px 24px; border-top: 1px solid #f0e2d6; font-weight: 800; font-size: 1.3rem; display: flex; justify-content: space-between; background: white; }
+    .cart-form { padding: 16px 24px 30px; background: #fefaf5; border-top: 1px solid #f0e2d6; }
+    .cart-form input, .cart-form textarea { width: 100%; padding: 12px 16px; margin-bottom: 14px; border: 1px solid #ffe0cc; border-radius: 32px; font-family: inherit; background: white; }
+    .cart-form button { width: 100%; background: #191970; border: none; padding: 14px; border-radius: 40px; font-weight: bold; color: white; font-size: 1rem; cursor: pointer; }
+    .clear-cart-btn { background: none; border: 1px solid #e0cbbc; margin-top: 10px; color: #b95b0e; }
+    .empty-cart-msg { text-align: center; padding: 40px 20px; color: #b9a68e; }
+    .toast-msg { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #2d2a24; color: white; padding: 12px 24px; border-radius: 60px; font-weight: 500; z-index: 300; opacity: 0; transition: 0.2s; pointer-events: none; }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="container">
+    <div class="logo">RushCoffee<span> delivery</span></div>
+    <div class="nav-links">
+      <a id="menuLink">Меню</a>
+      <a id="contactsLink">Контакты</a>
+    </div>
+    <div class="cart-icon" id="cartIcon">
+      <i class="fas fa-shopping-bag"></i>
+      <span class="cart-count" id="cartCount">0</span>
+    </div>
+  </div>
+</div>
+
+<main>
+  <section class="hero">
+    <div class="container hero-content">
+      <div class="hero-text">
+        <h1>Еда с частичкой души<br></h1>
+        <p>Свежие ингредиенты, авторские рецепты.</p>
+        <button class="btn-primary" id="scrollToMenu">Смотреть меню →</button>
+      </div>
+  </section>
+
+  <div class="container" id="menuSection">
+    <div class="filter-section" id="filterContainer"></div>
+    <div class="menu-grid" id="menuGrid"></div>
+  </div>
+
+  <div class="container" id="contactsSection">
+    <div class="contacts">
+      <div class="contact-item"><i class="fas fa-phone-alt"></i> <span>+7 (918)-030-04-70</span></div>
+      <div class="contact-item"><i class="fab fa-instagram"></i> <span>@RushCofee_delivery</span></div>
+      <div class="contact-item"><i class="fas fa-clock"></i> <span>9:00 – 20:00 (без выходных)</span></div>
+      <div class="contact-item"><i class="fas fa-map-marker-alt"></i> <span>Кухня: ул. Красных Партизан 1\4 к.7</span></div>
+    </div>
+  </div>
+  <footer><p>© RushCoffee — доставка вкуса. Спасибо, что выбираете нас! ;) + Flask</p></footer>
+</main>
+
+<div class="cart-overlay" id="cartOverlay"></div>
+<div class="cart-panel" id="cartPanel">
+  <div class="cart-header">
+    <span>🛒 Ваш заказ:</span>
+    <button class="close-cart" id="closeCartBtn"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="cart-items-list" id="cartItemsList"><div class="empty-cart-msg">Загрузка...</div></div>
+  <div class="cart-total"><span>Итого:</span><span id="cartTotalPrice">0 ₽</span></div>
+  <div class="cart-form">
+    <input type="text" id="customerName" placeholder="Как Вас зовут? *">
+    <input type="tel" id="customerPhone" placeholder="Телефон *">
+    <input type="text" id="customerAddress" placeholder="Куда доставить? *">
+    <textarea rows="2" id="orderComment" placeholder="Ваши особые пожелания"></textarea>
+    <button id="checkoutBtn">✅ Оформить заказ</button>
+    <button id="clearCartBtn" class="clear-cart-btn">🗑 Очистить корзину</button>
+  </div>
+</div>
+<div id="toastMsg" class="toast-msg"></div>
+
+<script>
+  async function fetchMenu(category = 'All') {
+    const url = `/api/menu?category=${encodeURIComponent(category)}`;
+    const res = await fetch(url);
+    return await res.json();
+  }
+  async function fetchCart() {
+    const res = await fetch('/api/cart');
+    return await res.json();
+  }
+  async function addToCart(id, quantity = 1) {
+    const res = await fetch('/api/cart/add', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, quantity })
+    });
+    return await res.json();
+  }
+  async function updateCartItem(id, delta) {
+    const res = await fetch('/api/cart/update', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, delta })
+    });
+    return await res.json();
+  }
+  async function removeCartItem(id) {
+    const res = await fetch('/api/cart/remove', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id })
+    });
+    return await res.json();
+  }
+  async function clearCart() {
+    const res = await fetch('/api/cart/clear', { method: 'POST' });
+    return await res.json();
+  }
+  async function checkout(orderData) {
+    const res = await fetch('/api/checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(orderData)
+    });
+    return await res.json();
+  }
+
+  let currentCategory = 'All';
+  let cartData = { items: [], total: 0 };
+
+  function showToast(msg, isError = false) {
+    const toast = document.getElementById('toastMsg');
+    toast.textContent = msg;
+    toast.style.background = isError ? '#c0392b' : '#2d2a24';
+    toast.style.opacity = '1';
+    setTimeout(() => toast.style.opacity = '0', 2200);
+  }
+
+  async function renderMenu() {
+    const items = await fetchMenu(currentCategory);
+    const grid = document.getElementById('menuGrid');
+    if (!items.length) { grid.innerHTML = '<div style="grid-column:1/-1; text-align:center;">Нет блюд</div>'; return; }
+    grid.innerHTML = items.map(item => `
+      <div class="card">
+        <img class="card-img" src="${item.image}" alt="${item.name}" loading="lazy" onerror="this.src='https://picsum.photos/id/20/300/200'">
+        <div class="card-content">
+          <div class="card-title">${escapeHtml(item.name)}</div>
+          <div class="card-desc">${escapeHtml(item.description)}</div>
+          <div class="price">${item.price} ₽</div>
+          <button class="add-to-cart" data-id="${item.id}">В корзину</button>
+        </div>
+      </div>
+    `).join('');
+    document.querySelectorAll('.add-to-cart').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        const id = parseInt(btn.dataset.id);
+        const result = await addToCart(id);
+        if (result.success) {
+          cartData = { items: result.cart, total: result.total };
+          updateCartUI();
+          showToast('Добавлено в корзину');
+        } else showToast('Ошибка', true);
+      });
+    });
+  }
+
+  async function updateCartUI() {
+    const data = await fetchCart();
+    cartData = data;
+    const count = cartData.items.reduce((s, i) => s + i.quantity, 0);
+    document.getElementById('cartCount').innerText = count;
+    if (cartPanel.classList.contains('open')) renderCartPanel();
+  }
+
+  function renderCartPanel() {
+    const container = document.getElementById('cartItemsList');
+    if (!cartData.items.length) {
+      container.innerHTML = '<div class="empty-cart-msg">Пока пусто :(</div>';
+      document.getElementById('cartTotalPrice').innerText = '0 ₽';
+      return;
+    }
+    let html = '';
+    cartData.items.forEach(item => {
+      html += `
+        <div class="cart-item" data-id="${item.id}">
+          <div class="cart-item-info">
+            <div class="cart-item-name">${escapeHtml(item.name)}</div>
+            <div class="cart-item-price">${item.price} ₽</div>
+          </div>
+          <div class="cart-item-actions">
+            <button class="cart-qty-minus" data-id="${item.id}">-</button>
+            <span>${item.quantity}</span>
+            <button class="cart-qty-plus" data-id="${item.id}">+</button>
+            <button class="cart-item-remove" data-id="${item.id}">🗑</button>
+          </div>
+        </div>
+      `;
+    });
+    container.innerHTML = html;
+    document.getElementById('cartTotalPrice').innerText = cartData.total + ' ₽';
+    document.querySelectorAll('.cart-qty-minus').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        const id = parseInt(btn.dataset.id);
+        const res = await updateCartItem(id, -1);
+        if (res.success) { cartData = { items: res.cart, total: res.total }; renderCartPanel(); updateCartUI(); }
+      });
+    });
+    document.querySelectorAll('.cart-qty-plus').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        const id = parseInt(btn.dataset.id);
+        const res = await updateCartItem(id, 1);
+        if (res.success) { cartData = { items: res.cart, total: res.total }; renderCartPanel(); updateCartUI(); }
+      });
+    });
+    document.querySelectorAll('.cart-item-remove').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        const id = parseInt(btn.dataset.id);
+        const res = await removeCartItem(id);
+        if (res.success) { cartData = { items: res.cart, total: res.total }; renderCartPanel(); updateCartUI(); showToast('Удалено'); }
+      });
+    });
+  }
+
+  async function renderFilters() {
+    const items = await fetchMenu('All');
+    const cats = ['All', ...new Set(items.map(i => i.category))];
+    const container = document.getElementById('filterContainer');
+    container.innerHTML = cats.map(cat => `<button class="filter-btn ${currentCategory === cat ? 'active' : ''}" data-cat="${cat}">${cat}</button>`).join('');
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        currentCategory = btn.dataset.cat;
+        renderFilters();
+        await renderMenu();
+      });
+    });
+  }
+
+  function escapeHtml(str) { return str.replace(/[&<>]/g, function(m){ if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
+
+  const cartOverlay = document.getElementById('cartOverlay');
+  const cartPanel = document.getElementById('cartPanel');
+  function openCartSidebar() { cartOverlay.classList.add('open'); cartPanel.classList.add('open'); renderCartPanel(); }
+  function closeCartSidebar() { cartOverlay.classList.remove('open'); cartPanel.classList.remove('open'); }
+
+  document.getElementById('cartIcon').addEventListener('click', openCartSidebar);
+  document.getElementById('closeCartBtn').addEventListener('click', closeCartSidebar);
+  document.getElementById('cartOverlay').addEventListener('click', closeCartSidebar);
+  document.getElementById('clearCartBtn').addEventListener('click', async () => { await clearCart(); await updateCartUI(); if(cartPanel.classList.contains('open')) renderCartPanel(); showToast('Корзина очищена'); });
+  document.getElementById('checkoutBtn').addEventListener('click', async () => {
+    const name = document.getElementById('customerName').value.trim();
+    const phone = document.getElementById('customerPhone').value.trim();
+    const address = document.getElementById('customerAddress').value.trim();
+    const comment = document.getElementById('orderComment').value;
+    if (!name || !phone || !address) { showToast('Заполните имя, телефон и адрес', true); return; }
+    const result = await checkout({ name, phone, address, comment });
+    if (result.success) {
+      showToast(result.message);
+      await updateCartUI();
+      if(cartPanel.classList.contains('open')) renderCartPanel();
+      document.getElementById('customerName').value = '';
+      document.getElementById('customerPhone').value = '';
+      document.getElementById('customerAddress').value = '';
+      document.getElementById('orderComment').value = '';
+      closeCartSidebar();
+    } else { showToast(result.error || 'Ошибка', true); }
+  });
+  document.getElementById('scrollToMenu').addEventListener('click', () => document.getElementById('menuSection').scrollIntoView({ behavior: 'smooth' }));
+  document.getElementById('menuLink').addEventListener('click', () => document.getElementById('menuSection').scrollIntoView({ behavior: 'smooth' }));
+  document.getElementById('contactsLink').addEventListener('click', () => document.getElementById('contactsSection').scrollIntoView({ behavior: 'smooth' }));
+
+  (async () => {
+    await renderFilters();
+    await renderMenu();
+    await updateCartUI();
+  })();
+</script>
+</body>
+</html>
